@@ -15,6 +15,18 @@ export default function Order() {
   const [cart, setCart] = useState([]);
   let selectedPizza, price;
 
+  async function checkout() {
+    setLoading(true);
+
+    await fetch("/api/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cart }),
+    });
+  }
+
   if (!loading) {
     selectedPizza = pizzaTypes.find((pizza) => pizza.id == pizzaType);
     price = intl.format(
@@ -113,7 +125,7 @@ export default function Order() {
           )}
         </form>
       </div>
-      {loading ? <h2>Loading...</h2> : <Cart cart={cart} />}
+      {loading ? <h2>Loading...</h2> : <Cart cart={cart} checkout={checkout} />}
     </div>
   );
 }
